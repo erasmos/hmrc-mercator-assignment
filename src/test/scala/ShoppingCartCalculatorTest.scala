@@ -12,35 +12,32 @@ class ShoppingCartCalculatorTest extends AnyWordSpec with Matchers with BeforeAn
   "When calculating the total cost of a shopping cart, we should" when {
     "fail" when {
       "there is an unrecognised item" in {
-        pending
+        the[UnknownItemTypeException] thrownBy {
+          ShoppingCartCalculator.calculate("A,X,O")
+        } should have message "Unknown item type: [X]"
       }
     }
     "succeed, returning the expected total price" when {
       "there are" when {
         "no items" in {
-          val totalValueInPence = ShoppingCartCalculator.calculate(Seq.empty)
+          val totalValueInPence = ShoppingCartCalculator.calculate("")
 
           totalValueInPence shouldBe 0
         }
-        "Three apples and one orange" in {
-          val totalValueInPence = ShoppingCartCalculator.calculate(Seq(Apple, Apple, Orange, Apple))
+        "items with different casing" in {
+          val totalValueInPence = ShoppingCartCalculator.calculate("A,a,O,A")
 
           totalValueInPence shouldBe 205
         }
-        "One apples and three orange" in {
-          val totalValueInPence = ShoppingCartCalculator.calculate(Seq(Apple, Orange, Orange, Orange))
+        "items with padding" in {
+          val totalValueInPence = ShoppingCartCalculator.calculate("A,O,  O  , O  ")
 
           totalValueInPence shouldBe 135
         }
-        "One apple" in {
-          val totalValueInPence = ShoppingCartCalculator.calculate(Seq(Apple))
+        "items with upper-casing, without padding" in {
+          val totalValueInPence = ShoppingCartCalculator.calculate("A,O")
 
-          totalValueInPence shouldBe 60
-        }
-        "One orange" in {
-          val totalValueInPence = ShoppingCartCalculator.calculate(Seq(Orange))
-
-          totalValueInPence shouldBe 25
+          totalValueInPence shouldBe 85
         }
       }
 
