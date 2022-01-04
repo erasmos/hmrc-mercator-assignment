@@ -1,74 +1,70 @@
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
 
-class ShoppingCartCalculatorTest extends AnyWordSpec with Matchers with BeforeAndAfterEach {
+class ShoppingCartCalculatorTest extends AnyFreeSpec with Matchers with BeforeAndAfterEach {
 
-  override protected def beforeEach(): Unit = {
-    //
-  }
-
-  "When calculating the total cost of a shopping cart, we should" when {
-    "fail" when {
+  "When calculating the total cost of a shopping cart, we should" - {
+    "fail when" - {
       "there is an unrecognised item" in {
         the[UnknownItemTypeException] thrownBy {
           ShoppingCartCalculator.calculate("A,X,O")
         } should have message "Unknown item type: [X]"
       }
     }
-    "succeed, returning the expected total price" when {
-      "there are" when {
+    "succeed, returning the expected total price, when" - {
+      "there are" - {
         "no items" in {
-          val totalValueInPence = ShoppingCartCalculator.calculate("")
+          val totalValue = ShoppingCartCalculator.calculate("")
 
-          totalValueInPence shouldBe 0
+          totalValue shouldBe BigDecimal(0)
         }
-        "items for which there are" when {
-          "no applicable offers" when {
+        "items for which there" - {
+          "are no applicable offers" - {
             "with different casing" in {
-              val totalValueInPence = ShoppingCartCalculator.calculate("a,o")
+              val totalValue = ShoppingCartCalculator.calculate("a,o")
 
-              totalValueInPence shouldBe 85
+              totalValue shouldBe BigDecimal(0.85)
             }
             "with padding" in {
-              val totalValueInPence = ShoppingCartCalculator.calculate("A,O,  O")
+              val totalValue = ShoppingCartCalculator.calculate("A,O,  O")
 
-              totalValueInPence shouldBe 110
+              totalValue shouldBe BigDecimal(1.10)
             }
             "with upper-casing, without padding" in {
-              val totalValueInPence = ShoppingCartCalculator.calculate("A,O")
+              val totalValue = ShoppingCartCalculator.calculate("A,O")
 
-              totalValueInPence shouldBe 85
+              totalValue shouldBe BigDecimal(0.85)
             }
           }
-          "a single offer applied once, namely" when {
+          "is a single offer applied once, namely" - {
             "buy one apple, and get one free" in {
-              val totalValueInPence = ShoppingCartCalculator.calculate("A,A")
+              val totalValue = ShoppingCartCalculator.calculate("A,A")
 
-              totalValueInPence shouldBe 60
+              totalValue shouldBe BigDecimal(0.60)
             }
             "buy three oranges, and get one free" in {
-              val totalValueInPence = ShoppingCartCalculator.calculate("O,O,O")
+              val totalValue = ShoppingCartCalculator.calculate("O,O,O")
 
-              totalValueInPence shouldBe 50
+              totalValue shouldBe BigDecimal(0.50)
             }
           }
-          "a single offer applied multiple times, namely" when {
+          "is a single offer applied multiple times, namely" - {
             "buy one apple, and get one free" in {
-              val totalValueInPence = ShoppingCartCalculator.calculate("A,A,A,A,A")
+              val totalValue = ShoppingCartCalculator.calculate("A,A,A,A,A")
 
-              totalValueInPence shouldBe 180
+              totalValue shouldBe BigDecimal(1.80)
             }
             "buy three oranges, and get one free" in {
-              val totalValueInPence = ShoppingCartCalculator.calculate("O,O,O,O,O,O,O")
+              val totalValue = ShoppingCartCalculator.calculate("O,O,O,O,O,O,O")
 
-              totalValueInPence shouldBe 125
+              totalValue shouldBe BigDecimal(1.25)
             }
           }
-          "multiple applicable offers applied multiple times" in {
-            val totalValueInPence = ShoppingCartCalculator.calculate("A,O,O,A,A,A,O,O,O,O")
+          "are multiple applicable offers applied multiple times" in {
+            val totalValue = ShoppingCartCalculator.calculate("A,O,O,A,A,A,O,O,O,O")
 
-            totalValueInPence shouldBe 220
+            totalValue shouldBe BigDecimal(2.20)
           }
 
         }

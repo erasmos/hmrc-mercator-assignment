@@ -2,20 +2,20 @@ import ItemTypes.{Apple, ItemType, Orange}
 
 object ShoppingCartCalculator {
 
-  def calculate(items: String): Int =
+  def calculate(items: String): BigDecimal =
     calculate(asItemTypes(items))
 
   private def asItemTypes(items: String): Seq[ItemType]
   = items.split(',').filterNot(_.isBlank).map(ItemTypes.resolve).toSeq
 
-  private def calculate(items: Seq[ItemType]): Int = {
+  private def calculate(items: Seq[ItemType]): BigDecimal = {
     val (costOfApplesWithOffer, remainingNumberOfApples) = applyAppleOffer(items)
     val (costOfOrangesWithOffer, remainingNumberOfOranges) = applyOrangeOffer(items)
 
-    val costOfApples = costOfApplesWithOffer + (remainingNumberOfApples * Apple.getCostInPence)
-    val costOfOranges = costOfOrangesWithOffer + (remainingNumberOfOranges * Orange.getCostInPence)
+    val costOfApplesInPence = costOfApplesWithOffer + (remainingNumberOfApples * Apple.getCostInPence)
+    val costOfOrangesInPence = costOfOrangesWithOffer + (remainingNumberOfOranges * Orange.getCostInPence)
 
-    costOfApples + costOfOranges
+    BigDecimal((costOfApplesInPence + costOfOrangesInPence) / 100.0)
   }
 
   /**
@@ -23,9 +23,10 @@ object ShoppingCartCalculator {
    */
   private def applyAppleOffer(items: Seq[ItemType]): (Int, Int) = {
     val originalNumber = items.count(_ == Apple)
-    val costPerAppliedOfferInPence = 60
-    val costOfAllAppliedOffers = (originalNumber / 2) * costPerAppliedOfferInPence
-    val remainingNumber = originalNumber % 2
+    val costPerAppliedOfferInPence = Apple.getCostInPence
+    val numberPerAppliedOffer = 2
+    val costOfAllAppliedOffers = (originalNumber / numberPerAppliedOffer) * costPerAppliedOfferInPence
+    val remainingNumber = originalNumber % numberPerAppliedOffer
     (costOfAllAppliedOffers, remainingNumber)
   }
 
@@ -34,9 +35,10 @@ object ShoppingCartCalculator {
    */
   private def applyOrangeOffer(items: Seq[ItemType]): (Int, Int) = {
     val originalNumber = items.count(_ == Orange)
-    val costPerAppliedOfferInPence = 50
-    val costOfAllAppliedOffers = (originalNumber / 3) * costPerAppliedOfferInPence
-    val remainingNumber = originalNumber % 3
+    val costPerAppliedOfferInPence = Orange.getCostInPence * 2
+    val numberPerAppliedOffer = 3
+    val costOfAllAppliedOffers = (originalNumber / numberPerAppliedOffer) * costPerAppliedOfferInPence
+    val remainingNumber = originalNumber % numberPerAppliedOffer
     (costOfAllAppliedOffers, remainingNumber)
   }
 }
