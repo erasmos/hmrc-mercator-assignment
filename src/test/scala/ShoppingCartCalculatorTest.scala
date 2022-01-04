@@ -1,4 +1,3 @@
-import ItemTypes.{Apple, Orange}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -24,20 +23,41 @@ class ShoppingCartCalculatorTest extends AnyWordSpec with Matchers with BeforeAn
 
           totalValueInPence shouldBe 0
         }
-        "items with different casing" in {
-          val totalValueInPence = ShoppingCartCalculator.calculate("A,a,O,A")
+        "items for which there are" when {
+          "no applicable offers" when {
+            "with different casing" in {
+              val totalValueInPence = ShoppingCartCalculator.calculate("A,a,O,A")
 
-          totalValueInPence shouldBe 205
-        }
-        "items with padding" in {
-          val totalValueInPence = ShoppingCartCalculator.calculate("A,O,  O  , O  ")
+              totalValueInPence shouldBe 205
+            }
+            "with padding" in {
+              val totalValueInPence = ShoppingCartCalculator.calculate("A,O,  O  , O  ")
 
-          totalValueInPence shouldBe 135
-        }
-        "items with upper-casing, without padding" in {
-          val totalValueInPence = ShoppingCartCalculator.calculate("A,O")
+              totalValueInPence shouldBe 135
+            }
+            "with upper-casing, without padding" in {
+              val totalValueInPence = ShoppingCartCalculator.calculate("A,O")
 
-          totalValueInPence shouldBe 85
+              totalValueInPence shouldBe 85
+            }
+          }
+          "a single applicable offer applied once, namely" when {
+            "buy one apple, and get one free" in {
+              pending
+            }
+            "buy three oranges, and get one free" in {
+              pending
+            }
+          }
+          "a single applicable offer applied multiple times, namely" when {
+            "buy one apple, and get one free" in {
+              pending
+            }
+            "buy three oranges, and get one free" in {
+              pending
+            }
+          }
+
         }
       }
 

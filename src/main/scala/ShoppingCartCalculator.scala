@@ -1,4 +1,4 @@
-import ItemTypes.ItemType
+import ItemTypes.{Apple, ItemType, Orange}
 
 object ShoppingCartCalculator {
 
