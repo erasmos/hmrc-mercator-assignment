@@ -48,6 +48,17 @@ class ShoppingCartCalculatorTest extends AnyFreeSpec with Matchers with BeforeAn
 
               totalValue shouldBe BigDecimal(0.50)
             }
+            "buy one banana, and get one free" in {
+              val totalValue = ShoppingCartCalculator.calculate("B,B")
+
+              totalValue shouldBe BigDecimal(0.20)
+            }
+            "buy one banana and one apple and the banana is free" in {
+              pending
+//              val totalValue = ShoppingCartCalculator.calculate("B,A")
+//
+//              totalValue shouldBe BigDecimal(0.60)
+            }
           }
           "is a single offer applied multiple times, namely" - {
             "buy one apple, and get one free" in {
@@ -60,11 +71,20 @@ class ShoppingCartCalculatorTest extends AnyFreeSpec with Matchers with BeforeAn
 
               totalValue shouldBe BigDecimal(1.25)
             }
+            "buy one banana, and get one free" in {
+              // B,B,B,B
+              pending
+            }
           }
-          "are multiple applicable offers applied multiple times" in {
-            val totalValue = ShoppingCartCalculator.calculate("A,O,O,A,A,A,O,O,O,O")
+          "are multiple applicable offers applied multiple times" - {
+            "case one" in {
+              val totalValue = ShoppingCartCalculator.calculate("A,O,O,A,A,A,O,O,O,O")
 
-            totalValue shouldBe BigDecimal(2.20)
+              totalValue shouldBe BigDecimal(2.20)
+            }
+            "case two" in {
+              // Bananas
+            }
           }
 
         }
